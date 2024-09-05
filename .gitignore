@@ -1,0 +1,46 @@
+Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+C extensions
+*.so
+
+Distribution / packaging
+.eggs/
+.zip
+.egg-info/
+dist/
+build/
+sdist/
+wheels/
+*.whl
+*.egg
+
+Local configuration files
+*.ini
+*.cfg
+*.secrets
+config.py
+.env
+
+Testing related files
+.pytest_cache/
+*.egg-info/
+.tox/
+
+IDE files
+*.idea/
+.vscode/
+
+Logs
+*.log
+
+Data files
+data/
+assets/
+
+Virtual environment
+.venv/
+env/
+venv/

@@ -8,5 +8,7 @@ print ("TechLookup")
 # --
 
 page = input("Pon una URL: ")
-urls = Processor.getURLs(page)
-print(json.dumps(urls, indent=4))
+
+# Recibe una url
+# Se envia a un buscador de urls
+# Por cada URL se recibe una 
