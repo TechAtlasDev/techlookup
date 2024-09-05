@@ -56,7 +56,12 @@ class Processor:
 
       Result: ["https://google.com", "https://www.google.com", "https://testing.google.com", "https://google.com/others"]"""
     
-    response = requests.get(url)
+    try:
+      response = requests.get(url, timeout=10)
+    except Exception as Error:
+      console.error(f"Se produjo un error: {Error}")
+      return None
+
     html = response.text
     soup = BeautifulSoup(html, "html.parser")
     links = []
@@ -87,11 +92,13 @@ class Processor:
       return found_technologies
 
 class loop:
-  def __init__(self, urlbase:str, limitLoops:int=5, verbose:int=2) -> dict:
+  def __init__(self, urlbase:str, limitLoops:int=5, verbose:int=2, timeout:int=10, limitPages:int=10) -> dict:
     self.urlbase = urlbase
     self.limitLoops = limitLoops
     self.verbose = verbose
     self.loop:int = 0
+    self.limitPages:int = limitPages
+    self.timeout:int = timeout
     self.results = {
       "techs": {},
       "urls": []
@@ -106,10 +113,10 @@ class loop:
       result = loop.finaliceLoop(self)
       return result
 
-    console.success(f"Loop [{self.loop}] iniciado")
+    if self.verbose > 1: console.success(f"Loop [{self.loop}] iniciado")
     self.loop += 1
     for URL in listURLs:
-#      console.debug(json.dumps(self.results, indent=4))
+      if self.verbose > 1: console.debug(json.dumps(self.results, indent=4))
 
       URLsInList = []
 
@@ -119,13 +126,16 @@ class loop:
       if len(URLsInList) >= 100:
         break
 
-      console.debug(f"Lista actual: {URLsInList} -> {len(URLsInList)}")
+      if self.verbose > 1: console.debug(f"Lista actual: {URLsInList} -> {len(URLsInList)}")
+      if self.limitPages >= len(URLsInList):
+        break
 
       if URL in URLsInList:
         continue
 
+      if self.verbose == 1: console.info(f"Analizando URL: {URL}")
       try:
-        html = requests.get(URL, timeout=5).text
+        html = requests.get(URL, timeout=self.timeout).text
       except Exception as Error:
         console.error(f"Se produjo un error: {Error}")
         continue
@@ -143,7 +153,8 @@ class loop:
 
     for URL in listURLs:
       listURLsAditional = Processor.getURLs(URL)
-      console.debug(f"Lista encontrada: {listURLsAditional}")
+      if not listURLsAditional: continue
+      if self.verbose > 1: console.debug(f"Lista encontrada: {listURLsAditional}")
       loop.parseListURLs(self, listURLsAditional)
 
   def finaliceLoop(self):

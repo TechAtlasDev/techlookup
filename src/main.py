@@ -1,14 +1,21 @@
 # -- Import libraries --
-from utils.objects import Processor
-import json
+from utils.extra import *
+import os, json
+from utils.objects import loop
+from utils.printers import console
 
 # -- Banner --
-print ("TechLookup")
+os.system('cls' if os.name == 'nt' else 'clear') # clear the screen
+print (BANNER)
 
-# --
+# -- Input User
+page:str = input(f"{YELLOW}Pon una web: {WHITE}")
+verbose:int = int(input(f"{YELLOW}Verbosidad (0-3): {WHITE}"))
+timeout:int = int(input(f"{YELLOW}Tiempo de espera (en segundos) [por defecto: 10]): {WHITE}"))
+limitPages:int = int(input(f"{YELLOW}Límite de páginas por analizar [por defecto: 100]: {WHITE}"))
 
-page = input("Pon una URL: ")
+# -- Process the web
+process:loop = loop(page, verbose=verbose, timeout=10 if not timeout else timeout, limitPages=limitPages if limitPages else 100)
+console.success("Se logró obtener los datos de manera satisfactoria!.")
 
-# Recibe una url
-# Se envia a un buscador de urls
-# Por cada URL se recibe una 
+print (json.dumps(process, indent=4))

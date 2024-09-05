@@ -4,7 +4,7 @@ import sys
 sys.path.append("../utils")
 from objects import loop
 
-URL = "https://www.unsa.edu.pe/"
+URL = "https://www.google.com/"
 console.log("Iniciando el loop")
 
 loop = loop(URL, 3)
